@@ -1,226 +1,94 @@
-Snow[] s = new Snow[500];
-Smoke[] sm = new Smoke[500];
-boolean addWind= false;
-boolean stop=false;
-boolean re =false;
-float x=0;
-float y=0;
+import java.util.*;
+import java.io.File;
+int num1,num2;
+File Senttest;
+String Sent;
+String [] splitSent;
+String [] splitSent2;
 
-void setup(){
-  size(500, 500);
+void setup() {
+  //size(750, 750);
   noStroke();
   smooth();
-  cursor(HAND);
-  frameRate(60);
-  for(int i =0; i<s.length; i++){
-   s[i]= new SnowFlake(); 
-  }
-  for(int i =0; i<sm.length; i++){
-   sm[i]= new Smoke(); 
-  }
-  
-  
-  
+  cursor(WAIT);
+  frameRate(15);
+  //copy from Dr. R.
+  Senttest = new File("C:\\Users\\lilga\\Documents\\Processing\\sketch_181205a\\data\\StringP");
+  Sent = Senttest.toString();
+  splitSent=Sent.split("[\\,!.\\s]+");
+  splitSent2=Sent.split("[\\?!.]+");
+
+  StringParser sp=new StringParser();
+  println("words " + sp.countWords(splitSent));
+  println("vowels " + sp.countVowels(Sent));
+  println("syllables " + sp.countSyllables(splitSent));
+  println("sentences " + sp.countSentences(splitSent2));
+  println("readablity " + sp.countSentences(splitSent,splitSent2));
+  println(Sent);
 }
-void draw(){
+void draw() {
   background(0);
-  fill(122, 122, 122);
- 
- if(stop){
-  pileUp(); 
- }
-
- for(int i=0; i<s.length; i++){
-  s[i].move();
-  s[i].show();
-  if(s[i].getSpeed()>10){
-   stop=true;
-  }
- }
-  for(int i=0; i<sm.length; i++){
-  sm[i].move();
-  sm[i].show();
-  }
-
-  //--------------------------------------------------------- TREE
-  fill(153, 76, 0);
-  rect(400, 440, 30, 60);
-  fill(0, 112, 0);
-  triangle(350, 450, 410, 200, 475, 450);
-  //---------------------------------------------------------- LIGHTS 
-  fill((float)Math.random()*255, (float)Math.random()*255, (float)Math.random()*255);
-  ellipse(350, 450, 10, 10);
-  ellipse(365, 425, 10, 10);
-  ellipse(390, 390, 10, 10);
-  ellipse(415, 300, 10, 10);
-  ellipse(400, 430, 10, 10);
-  ellipse(420, 350, 10, 10);
-  ellipse(475, 450, 10, 10);
-  ellipse(430, 370, 10, 10);
-  ellipse(460, 400, 10, 10);
-  ellipse(450, 420, 10, 10);
-  ellipse(415, 250, 10, 10);
-  ellipse(390, 320, 10, 10);
-
-  //--------------------------------------------------- STAR
-  fill(255, 255, (float)Math.random()*255);
-  pushMatrix();
-  translate(410, 210);
-  rotate(frameCount*100);
-  star(0, 0, 10, 1000, 1000); 
-  popMatrix();
-  //-------------------------------------------------HOUSE
-  fill(135,206,250);
-  rect(0, 350, 150, 400);
-  fill(203,65,84);
-  rect(100,250,40,90);
-  fill(139, 79, 29);
-  triangle(55, 250, 200, 380, -80, 380);
-  fill(255,255,(float)Math.random()*255);
-  rect(80, 400, 30, 30);  
-  fill(139,79, 29);
-  rect(35,450,30,100);
-  
-  //-------------------------------------------------TEXT
-  fill(255,0,0);
-  textSize(64);
-  text("HAPPY",100,100);
-  fill(0,255,0);
-  text("HOLIDAYS",150,150);
+  textSize(20);
+  color(255);
+  StringParser sp=new StringParser();
+  text(Sent, 20, 20);
+  text("words " + sp.countWords(splitSent), 20, 40);
+  text("vowels " + sp.countVowels(Sent), 20, 60);
+  text("syllables " + sp.countSyllables(splitSent), 20, 80);
+  text("sentences " + sp.countSentences(splitSent2), 20, 100);
 }
- void mousePressed() {
-  if (mouseButton == LEFT) {
-    addWind= true;
-  }
-  if (mouseButton == RIGHT) {
-    addWind= false;
-    x=0;
-    y=0;
-  }
-  
-}
- 
- void pileUp(){
-   fill(255,255,255);
-   
-   x+=4.6;
-   y+=4.6;
-   ellipse(1300,1300,x,y);
-  
-   
- }
- interface Snow{
-  void move();
-  void show();
- float getSpeed();
-  
-}
-void star(float x, float y, float radius1, float radius2, int npoints) {
-  float angle = TWO_PI / npoints;
-  float halfAngle = angle/2.0;
-  beginShape();
-  for (float a = 0; a < TWO_PI; a += angle) {
-    float sx = x + cos(a) * radius2;
-    float sy = y + sin(a) * radius2;
-    vertex(sx, sy);
-    sx = x + cos(a+halfAngle) * radius1;
-    sy = y + sin(a+halfAngle) * radius1;
-    vertex(sx, sy);
-  }
-  endShape(CLOSE);
-}
+public class StringParser {
 
-class Smoke implements Snow {
+  public StringParser() {
+  }
+  public int countWords(String [] splitSent) {
+    return splitSent.length;
+  }
+  public int countVowels(String Sent) {
+    char c;
+    int count = 0;
 
-  float xPos;
-  float yPos;
-  float speed;
-  float size;
-  float speedX;
-  float vel;
-
-  Smoke() {
-    xPos=random(100, 140);
-    yPos=random(800, 200);
-    speed=random(-3, -2);
-    size= random(1, 5);
-    speedX= random(-1.5, 1.5);
-    vel=.02;
+    for (int i = 0; i<=Sent.length()-1; i ++) {
+      c=Sent.charAt(i);
+      if (c == 'a' || c == 'e' || c == 'i' ||c == 'o' || c == 'u' || c == 'y') {
+        count++;
+      }
+    }
+    return count;
   }
 
 
-
-  void move() {
-    if (addWind) {
-      speedX+=vel;
+  public int countSyllables(String [] splitSent) {
+    int count = 0;
+    for (int i = 0; i < splitSent.length; i++ ) {
+      for (int j = 1; j < splitSent[i].length(); j++ ) {
+        if (isVowel(splitSent[i].charAt(j))) {
+          if (isVowel(splitSent[i].charAt(j-1))==false) {
+            count=count+1;
+          }
+        }
+      }
     }
 
-    if (yPos<=0) {
-       yPos=random(300, 250);
-       xPos=random(100, 140);
+    return count;
+  }
+  public boolean isVowel(char c) {
+    if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u') {
+      return true;
+    } else {
+      return false;
     }
-    if (xPos<=100 && yPos>250||xPos>=140 && yPos>250) {
-       xPos=random(100, 140);
-    }
-    yPos+=speed;
-    xPos+=speedX;
   }
 
-  void show() {
-    fill(144, 144, 144);
-    ellipse(xPos, yPos, size, size);
+  public int countSentences(String [] splitSent) {
+    return splitSent.length;
   }
 
-  float getSpeed() {
-    return speedX;
+  public float countSentences(String [] splitSent,String [] splitSent2) {
+    num1=countWords(splitSent)/splitSent.length;
+    num2=countSyllables(splitSent)/countSentences(splitSent2);
+    return 206.835-1.015*num1-84.6*num2;
   }
 }
 
-class SnowFlake implements Snow{
-  
-  float xPos;
-  float yPos;
-  float speed;
-  float size;
-  float speedX;
-  float vel;
-  
-  SnowFlake(){
-    xPos=random(0,1000);
-    yPos= random(-1000,-100);
-    speed=random(2,8);
-    size= random(1,5);
-    speedX= random(-1.5,1.5);
-    vel=.02;
-  }
-  
-  
-  
-  void move(){
-   if(addWind){
-     speedX+=vel;
-   }
-  
-    if(yPos>=500){
-     yPos=random(-100,0); 
-    }
-    if(xPos>=500){
-      xPos=random(-600,0);
-    }
-    yPos+=speed;
-    xPos+=speedX;
-   
-  }
-  
-  void show(){
-    fill(255,255,255);
-    ellipse(xPos, yPos, size, size);
-    
-    
-  }
-  
-  float getSpeed(){
-   return speedX; 
-  }
-  
-}
+
